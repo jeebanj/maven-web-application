@@ -8,7 +8,7 @@ properties([
 ])
 
 
-node('Paytmnode'){
+node('node1'){
     def mavenHome = tool name: 'Maven3.1.1', type: 'maven'
     
     stage('Checkoutthecode'){
