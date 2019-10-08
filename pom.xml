@@ -90,12 +90,12 @@
 	    <repository>
 	      <id>nexus</id>
 	      <name>Mithun Technologies Releases Nexus Repository</name>
-	      <url>http://13.126.49.41:8081/repository/pileline-release//</url>
+	      <url>http://13.232.70.33:8081/repository/maven-dev-release//</url>
 	    </repository>
 	    <snapshotRepository>
 	      <id>nexus</id>
 	      <name>Mithun Technologies Snapshot Nexus Repository </name>
-	      <url>http://13.126.49.41:8081/repository/pipeline//</url>
+	      <url>http://13.232.70.33:8081/repository/maven-dev-snapahot//</url>
 	    </snapshotRepository>
 	</distributionManagement>
 	
