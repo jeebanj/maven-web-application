@@ -1,0 +1,30 @@
+node{
+    properties([
+    buildDiscarder(logRotator(numToKeepStr: '3')),
+    pipelineTriggers([
+        pollSCM('* * * * *')
+    ])
+])
+
+    def mavenHome = tool name: 'maven-version-3.6.2' , type: 'maven'
+    stage('Checkoutcode'){
+    git credentialsId: 'f6e9eec8-75f8-420e-9a58-0326da594410', url: 'https://github.com/jeebanj/maven-web-application.git'
+    }
+    stage('build') {
+        sh "${mavenHome}/bin/mvn clean package"
+    }
+    stage('ExecuteSonaeQubeReport'){
+        sh "${mavenHome}/bin/mvn sonar:sonar"
+    }
+    stage('uploadArtifactRepository'){
+        sh "${mavenHome}/bin/mvn deploy"
+    }
+    stage('DeployApplicationIntoTomcat'){
+        sh "scp $WORKSPACE/target/*.war ec2-user@13.234.35.223:/opt/Tomcat/apache-tomcat-9.0.26/webapps/"
+    }
+    stage('SendEmailNotification'){
+        emailext body: '''Build is over
+Regard
+Jeeban''', subject: 'Build is over', to: 'jeebanjyoti666@gmail.com,satyaswarup12@gmail.com'
+    }
+}
