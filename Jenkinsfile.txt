@@ -20,7 +20,7 @@ node('slave'){
         sh "${mavenHome}/bin/mvn deploy"
     }
     stage('DeployApplicationIntoTomcat'){
-        sh "scp $WORKSPACE/target/*.war ec2-user@13.234.35.223:/opt/Tomcat/apache-tomcat-9.0.26/webapps/"
+        sh "scp $WORKSPACE/target/*.war ec2-user@13.234.111.138:/opt/Tomcat/apache-tomcat-9.0.26/webapps/"
     }
     stage('SendEmailNotification'){
         emailext body: '''Build is over
