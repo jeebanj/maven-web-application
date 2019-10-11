@@ -1,4 +1,4 @@
-node('slave'){
+node('paytm-node2'){
     properties([
     buildDiscarder(logRotator(numToKeepStr: '3')),
     pipelineTriggers([
