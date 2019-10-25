@@ -1,0 +1,27 @@
+node{
+    def mavenHome = tool name: 'maven-version-3.6.2', type: 'maven'
+    stage('Code Checkout'){
+        git credentialsId: 'github-credential', url: 'https://github.com/jeebanj/maven-web-application.git'
+    }
+    stage('Build Package'){
+        sh "${mavenHome}/bin/mvn clean package"
+    }
+    stage('Build Docker Image'){
+        sh 'docker build -t jeeban123/pipelineimage .'
+    }
+    stage('Push Docker Image'){
+        withCredentials([string(credentialsId: 'Docker_Hub_Passwd', variable: 'Docker_Hub_Passwd')]) {
+            sh "docker login -u jeeban123 -p ${Docker_Hub_Passwd}"
+}
+        sh 'docker push jeeban123/pipelineimage'
+    }
+    stage('Deploy Application in Deployment Server'){
+        def dockerRun = 'docker run -d -p 9090:8080 --name pipelinecontainer jeeban123/pipelineimage'
+    sshagent(['Docker_Server_ssh_Key']) {
+        sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.13.148 docker stop pipelinecontainer || true'
+        sh 'ssh ubuntu@172.31.13.148 docker rm pipelinecontainer || true'
+        sh 'ssh ubuntu@172.31.13.148 docker rmi -f $(docker images -q) || true'
+        sh "ssh ubuntu@172.31.13.148 ${dockerRun}"
+}
+    }
+}
