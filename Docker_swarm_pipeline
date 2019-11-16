@@ -1,0 +1,25 @@
+node{
+    def buildNumber = BUILD_NUMBER
+    def mavenHome = tool name: "maven-3.6.2", type: "maven"
+    stage('git clone'){
+    git credentialsId: 'github-credential', url: 'https://github.com/jeebanj/java-web-app-docker.git'
+    }
+    stage('Build package'){
+       sh  "${mavenHome}/bin/mvn clean package"
+    }
+    stage('Build docker image'){
+        sh 'docker build -t jeeban123/tomcat-swam .'
+    }
+    stage('push docker image'){
+        withCredentials([string(credentialsId: 'Docker_Hub_Passwd', variable: 'dockerhubpasswd')]) {
+       sh "docker login -u jeeban123 -p ${dockerhubpasswd}"
+}
+        sh 'docker push jeeban123/tomcat-swam'
+    }
+    stage('deploy in docker-swarm cluster'){
+       sshagent(['ubuntu-credential']) {
+    sh 'ssh -o StrictHostKeyChecking=no ubuntu@13.127.77.120 docker service rm swarmservice1 || true'
+    sh 'ssh ubuntu@13.127.77.120 docker service create -d -p 8080:8080 --name swarmservice1 --replicas 2 jeeban123/tomcat-swam'
+} 
+    }
+}
