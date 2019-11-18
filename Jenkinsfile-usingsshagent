@@ -1,0 +1,15 @@
+node{
+    def mavenHome = tool name: 'maven-3.6.2' , type: 'maven'
+    stage('git clone'){
+    git credentialsId: 'github-credential', url: 'https://github.com/jeebanj/maven-web-application.git'
+    }
+    stage('build'){
+        sh "${mavenHome}/bin/mvn clean package"
+    }
+    stage('deploy'){
+        sshagent(['ec2_user_credential']) {
+     sh 'ssh -o StrictHostKeyChecking=no ec2-user@172.31.29.188'
+     sh "scp $WORKSPACE/target/*.war ec2-user@172.31.29.188:/opt/Tomcat/apache-tomcat-9.0.27/webapps/"
+}
+    }
+}
