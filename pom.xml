@@ -90,12 +90,12 @@
 	    <repository>
 	      <id>nexus</id>
 	      <name>Mithun Technologies Releases Nexus Repository</name>
-	      <url>http://13.233.146.49:8081/repository/flipkart-release//</url>
+	      <url>http:http://ec2-52-66-214-152.ap-south-1.compute.amazonaws.com:8081/repository/mvn-relese//</url>
 	    </repository>
 		<snapshotRepository>
 	      <id>nexus</id>
 	      <name>Mithun Technologies Snapshot Nexus Repository </name>
-	      <url>http://13.233.146.49:8081/repository/flipkart-package//</url>
+	      <url>http://ec2-52-66-214-152.ap-south-1.compute.amazonaws.com:8081/repository/mvn-snapshot/</url>
 	    </snapshotRepository>
 	</distributionManagement>
 	
